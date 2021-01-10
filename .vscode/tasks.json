@@ -1,0 +1,28 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build Test",
+            "type": "shell",
+            "command": "cl.exe",
+            "args": [
+                "/W4",
+                "/EHsc",
+                "/Zi",
+                "/Fe:out\\testMain.exe",
+                "/Fd:out\\",
+                "/Fo:out\\",
+                "test/testMain.cpp",
+                "test/tinyjson_test.cpp"
+            ],
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always"
+            },
+            "problemMatcher": "$msCompile"
+        }
+    ]
+}
