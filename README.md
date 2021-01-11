@@ -43,6 +43,7 @@ A small lightweight Json c++ library that features:
 # How to build
    1. Git clone or download the sourc
    2. Open "x64 Native Tools Command Prompt"
-   3. Run "code ." to launch VS Code
-   4. Ctrl-Shift+ B to build sample
+   3. Natigate to the source code folder
+   4. Run "code ." to launch VS Code
+   5. Ctrl-Shift+ B to build sample
     
