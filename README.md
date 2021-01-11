@@ -39,3 +39,10 @@ A small lightweight Json c++ library that features:
     std::cout << "widget image name: " << w["widget"]["image"]["name"].get_string() << std::endl;
     std::cout << "widget image name: " << w["widget"]["image"]["hOffset"].get_integer() << std::endl;
     std::cout << "widget text onMouseUp: " << w["widget"]["text"]["onMouseUp"].get_string() << std::endl;
+    
+    #How to build
+     1. Git clone or download the sourc
+     2. Open "x64 Native Tools Command Prompt"
+     3. Run "code ." to launch VS Code
+     4. Ctrl-Shift+ B to build sample
+    
