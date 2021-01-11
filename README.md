@@ -3,6 +3,7 @@ A small lightweight Json c++ library that features:
  - Header only
  - Simple syntax
  - Full unicode support
+ - Support full JSON data type, parsing, serialization
 
 # Sample usage:
 
