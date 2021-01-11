@@ -55,7 +55,7 @@ TEST_CASE("Simple Json Constructor")
     // arrays
     std::vector<json> elms {2134, 781450, 0.187601, -984578, 0, 1, 24.059};
     json a1(elms);
-    REQUIRE(a1[(size_t)0].get_integer() == 2134);
+    REQUIRE(a1[0].get_integer() == 2134);
     REQUIRE(a1[(size_t)1].get_integer() == 781450);
     REQUIRE(a1[(size_t)2].get_double() == 0.187601);
     REQUIRE(a1[(size_t)3].get_integer() == -984578);
@@ -66,7 +66,7 @@ TEST_CASE("Simple Json Constructor")
     // objects
     std::vector<json> objs {2134, "abcd", true};
     json o1(objs);
-    REQUIRE(o1[(size_t)0].get_integer() == 2134);
+    REQUIRE(o1[0].get_integer() == 2134);
     REQUIRE(o1[(size_t)1].get_string() == "abcd");
     REQUIRE(o1[(size_t)2].get_bool() == true);
 }
@@ -217,7 +217,7 @@ TEST_CASE("Tiny Json Array Parsing")
 
     REQUIRE(5 == a1.size());
     REQUIRE(json_t::array == a1.type());
-    REQUIRE(124 == a1[(size_t)0].get_integer());
+    REQUIRE(124 == a1[0].get_integer());
     REQUIRE(-2.534 == a1[1].get_double());
     REQUIRE("hello world  " == a1[2].get_string());
     REQUIRE(nullptr == a1[3].get_null());
@@ -235,7 +235,7 @@ TEST_CASE("Tiny Json Array Parsing")
 
     REQUIRE(1 == a3.size());
     REQUIRE(json_t::array == a3.type());
-    REQUIRE(" elem1" == a3[(size_t)0].get_string());
+    REQUIRE(" elem1" == a3[0].get_string());
 
 
     u32_sstream as4(U" [ \" elem1\", {}, {\"p1\" : 498723123} ] ");
@@ -243,7 +243,7 @@ TEST_CASE("Tiny Json Array Parsing")
 
     REQUIRE(3 == a4.size());
     REQUIRE(json_t::array == a4.type());
-    REQUIRE(" elem1" == a4[(size_t)0].get_string());
+    REQUIRE(" elem1" == a4[0].get_string());
     REQUIRE(0 == a4[1].size());
     REQUIRE(1 == a4[2].size());
     REQUIRE(498723123 == a4[2]["p1"].get_integer());
@@ -253,8 +253,8 @@ TEST_CASE("Tiny Json Array Parsing")
 
     REQUIRE(a5.type() == json_t::array);
     REQUIRE(a5.size() == 1);
-    REQUIRE(a5[(size_t)0].type() == json_t::array);
-    REQUIRE(a5[(size_t)0].size() == 0);
+    REQUIRE(a5[0].type() == json_t::array);
+    REQUIRE(a5[0].size() == 0);
 
     u32_sstream as6(U" [[1984.2020], 2020.1984  ] ");
     auto a6 = parser::parse_array(as6);
@@ -262,17 +262,17 @@ TEST_CASE("Tiny Json Array Parsing")
     REQUIRE(a6.type() == json_t::array);
     REQUIRE(a6.size() == 2);
     REQUIRE(a6[1].get_double() == 2020.1984);
-    REQUIRE(a6[(size_t)0].type() == json_t::array);
-    REQUIRE(a6[(size_t)0].size() == 1);
-    REQUIRE(a6[(size_t)0][(size_t)0].get_double() == 1984.2020);
+    REQUIRE(a6[0].type() == json_t::array);
+    REQUIRE(a6[0].size() == 1);
+    REQUIRE(a6[0][0].get_double() == 1984.2020);
 
     u32_sstream as7(U" [[1984, \"1984\"], 2020, 1984 ] ");
     auto a7 = parser::parse_array(as7);
     REQUIRE(a7.type() == json_t::array);
     REQUIRE(a7.size() == 3);
-    REQUIRE(a7[(size_t)0].type() == json_t::array);
-    REQUIRE(a7[(size_t)0][(size_t)0].get_integer() == 1984);
-    REQUIRE(a7[(size_t)0][(size_t)1].get_string() == "1984");
+    REQUIRE(a7[0].type() == json_t::array);
+    REQUIRE(a7[0][0].get_integer() == 1984);
+    REQUIRE(a7[0][(size_t)1].get_string() == "1984");
     REQUIRE(a7[(size_t)1].get_integer() == 2020);
     REQUIRE(a7[(size_t)2].get_integer() == 1984);
 }
@@ -364,7 +364,7 @@ TEST_CASE("SimpleJson Serialization")
     REQUIRE(b["p4_____________"].get_double() == Approx(-0.9876540321).margin(0.00001));
 
     REQUIRE(b["_______p5"].type() == json_t::array);
-    REQUIRE(b["_______p5"][(size_t)0].get_string() == "abc");
+    REQUIRE(b["_______p5"][0].get_string() == "abc");
     REQUIRE(b["_______p5"][(size_t)1].get_double() == 0.31424);
     REQUIRE(b["_______p5"][(size_t)2].get_bool() == false);
 

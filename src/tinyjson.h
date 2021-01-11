@@ -140,7 +140,7 @@ public:
     // operator [] for object value
     const json operator [](const char * key) const;
     // operator [int] for array value
-    const json operator [](size_t index) const;
+    const json operator [](int index) const;
 
     /// Conversion
     operator const std::string() const;
@@ -458,12 +458,12 @@ const json json::operator [](const char * key) const
 }
 
 // operator [int] for array value
-const json json::operator[](size_t index) const
+const json json::operator[](int index) const
 {
     CHECK_TYPE_MISMATCH(this->_type, json_t::array);
 
     auto array = *static_cast<json_array*>(_value);
-    if (array.size() <= index)
+    if (index < 0 || index >= array.size())
     {
         throw std::runtime_error("index " + std::to_string(index) + " out of range.");
     }
