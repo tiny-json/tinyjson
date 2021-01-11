@@ -1,6 +1,10 @@
-#include "..\src\stdafx.h"
+
+#define CATCH_CONFIG_MAIN
+
 #include "catch.hpp"
 #include "..\src\tinyjson.h"
+
+// This tells Catch to provide a main() - only do this in one cpp file
 
 using namespace tinyjson;
 

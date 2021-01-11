@@ -12,11 +12,32 @@
                 "/Fe:out\\testMain.exe",
                 "/Fd:out\\",
                 "/Fo:out\\",
-                "test/testMain.cpp",
-                "test/tinyjson_test.cpp"
+                "test/tinyjsonTests.cpp"
             ],
             "group": {
                 "kind": "test",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always"
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "build Samples",
+            "type": "shell",
+            "command": "cl.exe",
+            "args": [
+                "/W4",
+                "/EHsc",
+                "/Zi",
+                "/Fe:out\\samples.exe",
+                "/Fd:out\\",
+                "/Fo:out\\",
+                "samples/main.cpp"
+            ],
+            "group": {
+                "kind": "build",
                 "isDefault": true
             },
             "presentation": {

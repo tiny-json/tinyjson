@@ -5,6 +5,18 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Run Samples",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}\\out\\samples.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "preLaunchTask": ""
+        },
+        {
             "name": "Run Test",
             "type": "cppvsdbg",
             "request": "launch",

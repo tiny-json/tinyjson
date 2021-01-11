@@ -1,6 +1,12 @@
 #pragma once
 
-#include "stdafx.h"
+#include <istream>
+#include <sstream>
+#include <string>
+#include <vector>
+#include <map>
+#include <algorithm>
+#include <stdexcept>
 #include <locale>
 #include <codecvt>
 #include <uchar.h>
