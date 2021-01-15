@@ -6,10 +6,7 @@
 #include <vector>
 #include <map>
 #include <algorithm>
-#include <stdexcept>
-#include <locale>
 #include <codecvt>
-#include <uchar.h>
 
 namespace tinyjson
 {
@@ -29,7 +26,7 @@ using u32_sstream = std::basic_stringstream<char32_t>;
     }
 #endif
 
-std::string trim(const std::string&& str,
+inline std::string trim(const std::string&& str,
                  const std::string& whitespace = " \t\r\n")
 {
     const auto strBegin = str.find_first_not_of(whitespace);
@@ -42,7 +39,7 @@ std::string trim(const std::string&& str,
     return str.substr(strBegin, strRange);
 }
 
-std::string U32ToU8(std::u32string u32)
+inline std::string U32ToU8(std::u32string u32)
 {
     try
     {
@@ -56,7 +53,7 @@ std::string U32ToU8(std::u32string u32)
     }
 }
 
-std::u32string U8ToU32(std::string u8)
+inline std::u32string U8ToU32(std::string u8)
 {
     try
     {
@@ -158,44 +155,44 @@ private:
 //
 // Implementation
 //
-json::json() : _value(nullptr), _type(json_t::null) {}
+inline json::json() : _value(nullptr), _type(json_t::null) {}
 
-json::json(std::string val)
+inline  json::json(std::string val)
     : _value(new std::string(val)), _type(json_t::string) {}
 
-json::json(std::string& val)
+inline json::json(std::string& val)
     : _value(new std::string(val)), _type(json_t::string) {}
 
-json::json(char val[])
+inline json::json(char val[])
     : _value(new std::string(val)), _type(json_t::string) {}
 
-json::json(double val)
+inline json::json(double val)
     : _value(new double(val)), _type(json_t::number_double) {}
 
-json::json(long long val)
+inline json::json(long long val)
     : _value(new long long(val)), _type(json_t::number_integer) {}
 
-json::json(int val)
+inline json::json(int val)
     : _value(new long long(val)), _type(json_t::number_integer) {}
 
-json::json(bool val)
+inline json::json(bool val)
     : _value(new bool(val)), _type(json_t::boolean) {}
 
-json::json(json_array& array)
+inline json::json(json_array& array)
     : _value(new json_array(array)), _type(json_t::array) {}
 
-json::json(json_array&& array)
+inline json::json(json_array&& array)
     : _value(new json_array(array)), _type(json_t::array) {}
 
-json::json(json_object& obj)
+inline json::json(json_object& obj)
     : _value(new json_object(obj)), _type(json_t::object) {}
 
-json::json(json_object&& obj)
+inline json::json(json_object&& obj)
     : _value(new json_object(obj)), _type(json_t::object) {}
 
-const json_t json::type() const { return _type; }
+inline const json_t json::type() const { return _type; }
 
-const std::string json::type_name() const
+inline const std::string json::type_name() const
 {
     switch(_type)
     {
@@ -227,7 +224,7 @@ const std::string json::type_name() const
 //
 // copy constructor
 //
-json::json(const json& other)
+inline json::json(const json& other)
 {
     _type = other._type;
     switch(_type)
@@ -261,7 +258,7 @@ json::json(const json& other)
 //
 // copy assignment
 //
-json& json::operator= (const json& other)
+inline json& json::operator= (const json& other)
 {
     _type = other._type;
     switch(_type)
@@ -293,7 +290,7 @@ json& json::operator= (const json& other)
     return *this;
 }
 
-bool json::operator==(const json& o) const
+inline bool json::operator==(const json& o) const
 {
     switch(_type)
     {
@@ -356,7 +353,7 @@ bool json::operator==(const json& o) const
     }
 }
 
-bool json::operator!=(const json& o) const
+inline bool json::operator!=(const json& o) const
 {
     return ! (*this == o);
 }
@@ -364,70 +361,70 @@ bool json::operator!=(const json& o) const
 //
 // belows method are for retrieving json values
 //
-const std::string json::get_string() const
+inline const std::string json::get_string() const
 {
     CHECK_TYPE_MISMATCH(this->_type, json_t::string);
     return *static_cast<std::string*>(_value);
 }
 
-const long long json::get_integer() const
+inline const long long json::get_integer() const
 {
     CHECK_TYPE_MISMATCH(this->_type, json_t::number_integer);
     return *static_cast<long long*>(_value);
 }
 
-const double json::get_double() const
+inline const double json::get_double() const
 {
     CHECK_TYPE_MISMATCH(this->_type, json_t::number_double);
     return *static_cast<double*>(_value);
 }
 
-const bool json::get_bool() const
+inline const bool json::get_bool() const
 {
     CHECK_TYPE_MISMATCH(this->_type, json_t::boolean);
     return *static_cast<bool*>(_value);
 }
 
-const json_object json::get_object() const
+inline const json_object json::get_object() const
 {
     CHECK_TYPE_MISMATCH(this->_type, json_t::object);
     return *static_cast<json_object*>(_value);
 }
 
-const json_array json::get_array() const
+inline const json_array json::get_array() const
 {
     CHECK_TYPE_MISMATCH(this->_type, json_t::array);
     return *static_cast<json_array*>(_value);
 }
 
-const void* json::get_null() const
+inline const void* json::get_null() const
 {
     CHECK_TYPE_MISMATCH(this->_type, json_t::null);
     return nullptr;
 }
 
-bool json::has_member(std::string member_name)
+inline bool json::has_member(std::string member_name)
 {
     CHECK_TYPE_MISMATCH(this->_type, json_t::object);
     auto members = static_cast<json_object*>(_value);
     return (members->find(member_name) != members->end());
 }
 
-void json::add_member(std::string member_name, json member_value)
+inline void json::add_member(std::string member_name, json member_value)
 {
     CHECK_TYPE_MISMATCH(this->_type, json_t::object);
     auto members = static_cast<json_object*>(_value);
     (*members)[member_name] = member_value;
 }
 
-void json::add_element(json elem)
+inline void json::add_element(json elem)
 {
     CHECK_TYPE_MISMATCH(this->_type, json_t::array);
     auto elems = static_cast<json_array*>(_value);
     elems->push_back(elem);
 }
 
-size_t json::size() const
+inline size_t json::size() const
 {
     if (_type == json_t::array)
     {
@@ -444,7 +441,7 @@ size_t json::size() const
 }
 
 // operator [] for object value
-const json json::operator [](const char * key) const
+inline const json json::operator [](const char * key) const
 {
     CHECK_TYPE_MISMATCH(this->_type, json_t::object);
 
@@ -458,12 +455,12 @@ const json json::operator [](const char * key) const
 }
 
 // operator [int] for array value
-const json json::operator[](int index) const
+inline const json json::operator[](int index) const
 {
     CHECK_TYPE_MISMATCH(this->_type, json_t::array);
 
     auto array = *static_cast<json_array*>(_value);
-    if (index < 0 || index >= array.size())
+    if (index < 0 || (size_t)index >= array.size())
     {
         throw std::runtime_error("index " + std::to_string(index) + " out of range.");
     }
@@ -472,7 +469,7 @@ const json json::operator[](int index) const
 }
 
 /// destructor
-json::~json()
+inline json::~json()
 {
     switch (_type)
     {
@@ -500,7 +497,7 @@ json::~json()
 }
 
 /// Conversion
-json::operator const std::string() const
+inline json::operator const std::string() const
 {
     switch (_type)
     {
@@ -511,7 +508,7 @@ json::operator const std::string() const
     }
 }
 
-json::operator const double() const
+inline json::operator const double() const
 {
     switch (_type)
     {
@@ -522,7 +519,7 @@ json::operator const double() const
     }
 }
 
-json::operator const long long() const
+inline json::operator const long long() const
 {
     switch (_type)
     {
@@ -533,7 +530,7 @@ json::operator const long long() const
     }
 }
 
-json::operator const bool() const
+inline json::operator const bool() const
 {
     switch (_type)
     {
@@ -544,7 +541,7 @@ json::operator const bool() const
     }
 }
 
-const std::string json::to_string() const
+inline const std::string json::to_string() const
 {
     switch(type())
     {
@@ -574,7 +571,7 @@ const std::string json::to_string() const
     }
 }
 
-const std::string json::object_to_string() const
+inline const std::string json::object_to_string() const
 {
     std::stringstream ss;
     ss << "{";
@@ -598,7 +595,7 @@ const std::string json::object_to_string() const
     return ss.str();
 }
 
-const std::string json::array_to_string() const
+inline const std::string json::array_to_string() const
 {
     std::stringstream ss;
     ss << "[";
