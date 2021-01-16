@@ -56,19 +56,29 @@ TEST_CASE("Simple Json Constructor")
     std::vector<json> elms {2134, 781450, 0.187601, -984578, 0, 1, 24.059};
     json a1(elms);
     REQUIRE(a1[0].get_integer() == 2134);
-    REQUIRE(a1[(size_t)1].get_integer() == 781450);
-    REQUIRE(a1[(size_t)2].get_double() == 0.187601);
-    REQUIRE(a1[(size_t)3].get_integer() == -984578);
-    REQUIRE(a1[(size_t)4].get_integer() == 0);
-    REQUIRE(a1[(size_t)5].get_integer() == 1);
-    REQUIRE(a1[(size_t)6].get_double() == 24.059);
+    REQUIRE(a1[1].get_integer() == 781450);
+    REQUIRE(a1[2].get_double() == 0.187601);
+    REQUIRE(a1[3].get_integer() == -984578);
+    REQUIRE(a1[4].get_integer() == 0);
+    REQUIRE(a1[5].get_integer() == 1);
+    REQUIRE(a1[6].get_double() == 24.059);
 
-    // objects
-    std::vector<json> objs {2134, "abcd", true};
-    json o1(objs);
-    REQUIRE(o1[0].get_integer() == 2134);
-    REQUIRE(o1[(size_t)1].get_string() == "abcd");
-    REQUIRE(o1[(size_t)2].get_bool() == true);
+    // object
+    json o1(json_object{});
+    o1.add_member("p1", "helloworld");
+    o1.add_member("p2", 3.1415926);
+    o1.add_member("p3", 9876543210);
+    o1.add_member("p4", json(json_object{}));
+
+    o1["p4"].add_member("p4_1", true);
+    o1["p4"].add_member("p4_2", -0.1356456);
+
+    REQUIRE(o1["p1"].get_string() == "helloworld");
+    REQUIRE(o1["p2"].get_double() == 3.1415926);
+    REQUIRE(o1["p3"].get_integer() == 9876543210);
+
+    REQUIRE(o1["p4"]["p4_1"].get_bool() == true);
+    REQUIRE(o1["p4"]["p4_2"].get_double() == -0.1356456);
 }
 
 TEST_CASE("Tiny Json String Parsing")
@@ -272,9 +282,9 @@ TEST_CASE("Tiny Json Array Parsing")
     REQUIRE(a7.size() == 3);
     REQUIRE(a7[0].type() == json_t::array);
     REQUIRE(a7[0][0].get_integer() == 1984);
-    REQUIRE(a7[0][(size_t)1].get_string() == "1984");
-    REQUIRE(a7[(size_t)1].get_integer() == 2020);
-    REQUIRE(a7[(size_t)2].get_integer() == 1984);
+    REQUIRE(a7[0][1].get_string() == "1984");
+    REQUIRE(a7[1].get_integer() == 2020);
+    REQUIRE(a7[2].get_integer() == 1984);
 }
 
 TEST_CASE("Tiny Json Object Parsing")
@@ -365,8 +375,8 @@ TEST_CASE("SimpleJson Serialization")
 
     REQUIRE(b["_______p5"].type() == json_t::array);
     REQUIRE(b["_______p5"][0].get_string() == "abc");
-    REQUIRE(b["_______p5"][(size_t)1].get_double() == 0.31424);
-    REQUIRE(b["_______p5"][(size_t)2].get_bool() == false);
+    REQUIRE(b["_______p5"][1].get_double() == 0.31424);
+    REQUIRE(b["_______p5"][2].get_bool() == false);
 
     REQUIRE(b["示例一"].get_bool() == false);
     REQUIRE(b["你好 hello"].get_string() == "world9");
@@ -549,4 +559,52 @@ TEST_CASE("SimpleJson Json Parsing Failure")
     REQUIRE_THROWS(parser::parse("["));
     REQUIRE_THROWS(parser::parse("[]]"));
     REQUIRE_THROWS(parser::parse("hello"));
+}
+
+TEST_CASE("SimpleJson Json Parsing 1")
+{
+    json j = parser::parse(R"RAW(
+        {
+        "command": "launch",
+        "arguments": {
+            "name": "Debug",
+            "type": "windbg",
+            "request": "launch",
+            "program": "C:\\VC\\helloworld/helloworld.exe",
+            "args": [
+
+            ],
+            "cwd": "C:\\VC\\helloworld/",
+            "debugServer": 8888,
+            "__configurationTarget": 5,
+            "__sessionId": "df7ac0b9-4d27-4aba-a73f-7fd8207bb590"
+        },
+        "type": "request",
+        "seq": 2
+        }
+    )RAW");
+
+    REQUIRE(j.type() == json_t::object);
+    REQUIRE(j["command"].get_string() == "launch");
+    REQUIRE(j["arguments"]["name"].get_string() == "Debug");
+    REQUIRE(j["arguments"]["type"].get_string() == "windbg");
+    REQUIRE(j["arguments"]["request"].get_string() == "launch");
+    REQUIRE(j["arguments"]["program"].get_string() == "C:\\VC\\helloworld/helloworld.exe");
+    REQUIRE(j["arguments"]["args"].size() == 0);
+    REQUIRE(j["arguments"]["cwd"].get_string() == "C:\\VC\\helloworld/");
+    REQUIRE(j["arguments"]["debugServer"].get_integer() == 8888);
+    REQUIRE(j["arguments"]["__configurationTarget"].get_integer() == 5);
+    REQUIRE(j["arguments"]["__sessionId"].get_string() == "df7ac0b9-4d27-4aba-a73f-7fd8207bb590");
+    REQUIRE(j["type"].get_string() == "request");
+    REQUIRE(j["seq"].get_integer() == 2);
+}
+
+
+TEST_CASE("SimpleJson Json Parsing 2")
+{
+    json j = parser::parse(R"RAW(
+        ["computer"]
+    )RAW");
+
+    REQUIRE(j[0].get_string() == "computer");
 }

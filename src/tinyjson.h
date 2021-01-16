@@ -135,9 +135,9 @@ public:
     void add_element(json elem);
 
     // operator [] for object value
-    const json operator [](const char * key) const;
+    json& operator [](const char * key);
     // operator [int] for array value
-    const json operator [](int index) const;
+    json& operator [](int index);
 
     /// Conversion
     operator const std::string() const;
@@ -441,11 +441,11 @@ inline size_t json::size() const
 }
 
 // operator [] for object value
-inline const json json::operator [](const char * key) const
+inline json& json::operator [](const char * key)
 {
     CHECK_TYPE_MISMATCH(this->_type, json_t::object);
 
-    auto members = static_cast<json_object*>(_value);
+    json_object* members = static_cast<json_object*>(_value);
     if (members->find(key) == members->end())
     {
         throw std::runtime_error("key " + std::string(key) + " not found.");
@@ -455,17 +455,17 @@ inline const json json::operator [](const char * key) const
 }
 
 // operator [int] for array value
-inline const json json::operator[](int index) const
+inline json& json::operator[](int index)
 {
     CHECK_TYPE_MISMATCH(this->_type, json_t::array);
 
-    auto array = *static_cast<json_array*>(_value);
-    if (index < 0 || (size_t)index >= array.size())
+    json_array* array = static_cast<json_array*>(_value);
+    if (index < 0 || (size_t)index >= array->size())
     {
         throw std::runtime_error("index " + std::to_string(index) + " out of range.");
     }
 
-    return array[index];
+    return (*array)[index];
 }
 
 /// destructor
@@ -780,6 +780,7 @@ static json parse_array(u32_istream& strm)
     // Empty array
     if (c == U']')
     {
+        skip_char(strm, U']');
         return json(vector_val);
     }
 
